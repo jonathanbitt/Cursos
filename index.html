@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursos - Portal de Estudos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header {
+            margin-bottom: 40px;
+            padding: 20px;
+            animation: fadeInDown 1s ease;
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 0;
+            top: 20px;
+            color: #4ecca3;
+            font-size: 1.2rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            transform: translateX(-5px);
+            color: #fff;
+        }
+
+        .back-button i {
+            margin-right: 8px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .logo i {
+            font-size: 2.8rem;
+            color: #4ecca3;
+            margin-right: 15px;
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #4ecca3, #f9f9f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            font-weight: 300;
+            max-width: 700px;
+            margin: 20px auto 0;
+            color: #f0f0f0;
+            line-height: 1.6;
+        }
+
+        .category-title {
+            text-align: left;
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4ecca3;
+            font-size: 2rem;
+            color: #4ecca3;
+            position: relative;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .category-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100px;
+            height: 2px;
+            background: #fff;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .thumbnail {
+            height: 200px;
+            width: 100%;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .thumbnail::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.7));
+        }
+
+        .thumbnail.vida-intelectual {
+            background: linear-gradient(45deg, #3498db, #1abc9c), url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');
+        }
+
+        .thumbnail.vida-espiritual {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad), url('https://images.unsplash.com/photo-1547981609-4b6bf67db7bd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');
+        }
+
+        .thumbnail.idiomas {
+            background: linear-gradient(45deg, #e74c3c, #e67e22), url('https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');
+        }
+
+        .thumbnail.xadrez {
+            background: linear-gradient(45deg, #34495e, #2c3e50), url('https://images.unsplash.com/photo-1528190336454-13cd56b45b5a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');
+        }
+
+        .card-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #4ecca3;
+        }
+
+        .card p {
+            color: #e0e0e0;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #4ecca3;
+            color: #232931;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid #4ecca3;
+            align-self: flex-start;
+        }
+
+        .btn:hover {
+            background: transparent;
+            color: #4ecca3;
+            transform: scale(1.05);
+        }
+
+        .btn i {
+            margin-left: 8px;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding: 20px;
+            text-align: center;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card:nth-child(1) {
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+            opacity: 0;
+        }
+        .card:nth-child(2) {
+            animation: fadeInUp 0.8s ease 0.4s forwards;
+            opacity: 0;
+        }
+        .card:nth-child(3) {
+            animation: fadeInUp 0.8s ease 0.6s forwards;
+            opacity: 0;
+        }
+        .card:nth-child(4) {
+            animation: fadeInUp 0.8s ease 0.8s forwards;
+            opacity: 0;
+        }
+
+        @media (max-width: 768px) {
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .category-title {
+                text-align: center;
+            }
+            
+            .category-title::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .back-button {
+                position: relative;
+                top: 0;
+                margin-bottom: 20px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </a>
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <h1>Cursos Disponíveis</h1>
+            </div>
+            <p class="subtitle">Explore nossas categorias de cursos e encontre o conteúdo ideal para sua jornada de aprendizado</p>
+        </header>
+
+        <main>
+            <h2 class="category-title">Categorias de Estudo</h2>
+            <div class="cards-container">
+                <!-- Card Vida Intelectual -->
+                <div class="card">
+                    <div class="thumbnail vida-intelectual"></div>
+                    <div class="card-content">
+                        <h3>Vida Intelectual</h3>
+                        <p>Desenvolva sua capacidade de pensamento crítico, análise e síntese. Cursos para expandir sua mente e compreensão do mundo.</p>
+                        <a href="Vida Intelectual/vida_intelectual.html" class="btn">Explorar Cursos <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Card Vida Espiritual -->
+                <div class="card">
+                    <div class="thumbnail vida-espiritual"></div>
+                    <div class="card-content">
+                        <h3>Vida Espiritual</h3>
+                        <p>Jornadas de autoconhecimento, meditação e crescimento pessoal. Conecte-se com seu propósito e encontre equilíbrio interior.</p>
+                        <a href="vida_espiritual.html" class="btn">Explorar Cursos <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Card Idiomas -->
+                <div class="card">
+                    <div class="thumbnail idiomas"></div>
+                    <div class="card-content">
+                        <h3>Idiomas</h3>
+                        <p>Aprenda novos idiomas e expanda suas fronteiras. Cursos para todos os níveis, do básico ao avançado, com metodologia eficiente.</p>
+                        <a href="idiomas\idiomas.html" class="btn">Explorar Cursos <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Card Xadrez -->
+                <div class="card">
+                    <div class="thumbnail xadrez"></div>
+                    <div class="card-content">
+                        <h3>Xadrez</h3>
+                        <p>Domine a arte do xadrez com cursos para iniciantes e avançados. Desenvolva estratégia, paciência e pensamento tático.</p>
+                        <a href="xadrez.html" class="btn">Explorar Cursos <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Portal de Estudos &copy; 2023 - Transformando conhecimento em crescimento</p>
+        </footer>
+    </div>
+
+    <script>
+        // Efeito de digitação no subtítulo
+        document.addEventListener('DOMContentLoaded', function() {
+            const subtitle = document.querySelector('.subtitle');
+            const text = subtitle.textContent;
+            subtitle.textContent = '';
+            
+            let i = 0;
+            const typingEffect = setInterval(() => {
+                if (i < text.length) {
+                    subtitle.textContent += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typingEffect);
+                }
+            }, 30);
+        });
+    </script>
+</body>
+</html>
