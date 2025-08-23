@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Início da Vida de Estudos - Portal de Estudos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0a1a4a, #1a3a8f, #0a1a4a);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header {
+            margin-bottom: 40px;
+            padding: 20px;
+            animation: fadeInDown 1s ease;
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 0;
+            top: 20px;
+            color: #4ecca3;
+            font-size: 1.2rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            transform: translateX(-5px);
+            color: #fff;
+        }
+
+        .back-button i {
+            margin-right: 8px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .logo i {
+            font-size: 2.8rem;
+            color: #4ecca3;
+            margin-right: 15px;
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #4ecca3, #a8e6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            font-weight: 300;
+            max-width: 700px;
+            margin: 0 auto;
+            color: #f0f0f0;
+            line-height: 1.6;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .thumbnail {
+            height: 200px;
+            width: 100%;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .thumbnail::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.7));
+        }
+
+        .thumbnail.bruno {
+            background: linear-gradient(45deg, #1a3a8f, #4ecca3), url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');
+        }
+
+        .thumbnail.gurgel {
+            background: linear-gradient(45deg, #0a1a4a, #1a3a8f), url('https://images.unsplash.com/photo-1547981609-4b6bf67db7bd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');
+        }
+
+        .thumbnail.ihsv {
+            background: linear-gradient(45deg, #1a3a8f, #0a1a4a), url('https://images.unsplash.com/photo-1513094735237-8f2714d57c13?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');
+        }
+
+        .card-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #4ecca3;
+        }
+
+        .card p {
+            color: #e0e0e0;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            flex-grow: 1;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #4ecca3;
+            color: #232931;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid #4ecca3;
+            align-self: center;
+        }
+
+        .btn:hover {
+            background: transparent;
+            color: #4ecca3;
+            transform: scale(1.05);
+        }
+
+        .btn i {
+            margin-left: 8px;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding: 20px;
+            text-align: center;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card:nth-child(1) {
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+            opacity: 0;
+        }
+        .card:nth-child(2) {
+            animation: fadeInUp 0.8s ease 0.4s forwards;
+            opacity: 0;
+        }
+        .card:nth-child(3) {
+            animation: fadeInUp 0.8s ease 0.6s forwards;
+            opacity: 0;
+        }
+
+        @media (max-width: 768px) {
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="../cursos.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Voltar para Cursos
+            </a>
+            <div class="logo">
+                <i class="fas fa-book-open"></i>
+                <h1>Início da Vida de Estudos</h1>
+            </div>
+            <p class="subtitle">Cursos essenciais para estabelecer uma base sólida na vida intelectual e desenvolver hábitos de estudo eficazes</p>
+        </header>
+
+        <main>
+            <div class="cards-container">
+                <!-- Curso Bruno Magalhães -->
+                <div class="card">
+                    <div class="thumbnail bruno"></div>
+                    <div class="card-content">
+                        <h3>Início da Vida de Estudos – Bruno Magalhães</h3>
+                        <p>Um guia prático para quem está começando sua jornada intelectual, com métodos comprovados para desenvolver disciplina e eficiência nos estudos.</p>
+                        <a href="Inicio da vida de estudos\InicioDaVidaDeEstudos.html" class="btn">Acessar Curso <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Curso Rodrigo Gurgel -->
+                <div class="card">
+                    <div class="thumbnail gurgel"></div>
+                    <div class="card-content">
+                        <h3>O Leitor Ideal - Rodrigo Gurgel</h3>
+                        <p>Desenvolva as habilidades necessárias para se tornar um leitor crítico e profundo, capaz de extrair o máximo de cada obra que ler.</p>
+                        <a href="OLeitorIdeal/OLeitorIdeal.html" class="btn">Acessar Curso <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Curso IHSV -->
+                <div class="card">
+                    <div class="thumbnail ihsv"></div>
+                    <div class="card-content">
+                        <h3>Formação para Ler os Clássicos – IHSV</h3>
+                        <p>Um programa completo para ler e compreender as grandes obras da literatura universal, com métodos de análise e interpretação textual.</p>
+                        <a href="FormaçãoParaLerOsClássicos/FormaçãoParaLerOsClássicos.html" class="btn">Acessar Curso <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Portal de Estudos &copy; 2023 - Construindo uma vida intelectual sólida</p>
+        </footer>
+    </div>
+
+    <script>
+        // Efeito de digitação no subtítulo
+        document.addEventListener('DOMContentLoaded', function() {
+            const subtitle = document.querySelector('.subtitle');
+            const text = subtitle.textContent;
+            subtitle.textContent = '';
+            
+            let i = 0;
+            const typingEffect = setInterval(() => {
+                if (i < text.length) {
+                    subtitle.textContent += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typingEffect);
+                }
+            }, 30);
+        });
+    </script>
+</body>
+</html>
