@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alfabeto Aleatório</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .letter-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+        }
+        
+        .letter {
+            font-size: 120px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .speaker-btn {
+            background-color: #2196F3;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="letter-container">
+        <div class="letter" id="letterDisplay"></div>
+        <button class="speaker-btn" id="speakerBtn" disabled>🔊</button>
+    </div>
+    
+    <div class="buttons">
+        <button id="startBtn">Iniciar</button>
+        <button id="nextBtn" disabled>Próximo</button>
+        <button id="endBtn" disabled>Encerrar</button>
+    </div>
+
+    <script>
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+        let currentIndex = -1;
+        let randomAlphabet = [];
+        
+        const letterDisplay = document.getElementById('letterDisplay');
+        const speakerBtn = document.getElementById('speakerBtn');
+        const startBtn = document.getElementById('startBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const endBtn = document.getElementById('endBtn');
+        
+        // Função para embaralhar o alfabeto
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+        
+        // Cria elementos de áudio para cada letra
+        const audioElements = {};
+        alphabet.forEach(letter => {
+            audioElements[letter] = new Audio();
+            audioElements[letter].src = `${letter}.mp4`;
+            audioElements[letter].type = 'audio/mp4';
+        });
+        
+        startBtn.addEventListener('click', () => {
+            randomAlphabet = shuffleArray(alphabet);
+            currentIndex = 0;
+            updateDisplay();
+            startBtn.disabled = true;
+            nextBtn.disabled = false;
+            endBtn.disabled = false;
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < randomAlphabet.length - 1) {
+                currentIndex++;
+                updateDisplay();
+            }
+            
+            if (currentIndex === randomAlphabet.length - 1) {
+                nextBtn.disabled = true;
+            }
+        });
+        
+        endBtn.addEventListener('click', () => {
+            currentIndex = -1;
+            randomAlphabet = [];
+            letterDisplay.textContent = '';
+            speakerBtn.disabled = true;
+            startBtn.disabled = false;
+            nextBtn.disabled = true;
+            endBtn.disabled = true;
+            
+            // Para qualquer áudio que esteja tocando
+            Object.values(audioElements).forEach(audio => {
+                audio.pause();
+                audio.currentTime = 0;
+            });
+        });
+        
+        speakerBtn.addEventListener('click', () => {
+            const currentLetter = randomAlphabet[currentIndex];
+            const audio = audioElements[currentLetter];
+            
+            // Reinicia o áudio se já estiver tocando
+            audio.currentTime = 0;
+            audio.play().catch(error => {
+                console.error("Erro ao reproduzir áudio:", error);
+                alert(`Erro ao reproduzir o áudio. Verifique se o arquivo ${currentLetter}.mp4 existe.`);
+            });
+        });
+        
+        function updateDisplay() {
+            const currentLetter = randomAlphabet[currentIndex];
+            letterDisplay.textContent = currentLetter;
+            speakerBtn.disabled = false;
+            
+            // Para qualquer áudio que esteja tocando antes de mudar de letra
+            Object.values(audioElements).forEach(audio => {
+                audio.pause();
+                audio.currentTime = 0;
+            });
+        }
+    </script>
+</body>
+</html>
