@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Numbers (English)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .number-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+        }
+        
+        .number {
+            font-size: 120px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .speaker-btn {
+            background-color: #2196F3;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .toggle-range {
+            margin-top: 10px;
+            background-color: #ff9800;
+        }
+        
+        .range-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .speed-controls {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 300px;
+        }
+        
+        .speed-btn {
+            background-color: #9c27b0;
+            padding: 5px 10px;
+            font-size: 14px;
+            min-width: 50px;
+        }
+        
+        .speed-btn.active {
+            background-color: #6a1b9a;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Página 0-99 -->
+    <div id="page1">
+        <div class="number-container">
+            <div class="number" id="numberDisplay1"></div>
+            <button class="speaker-btn" id="speakerBtn1" disabled>🔊</button>
+            <div class="speed-controls">
+                <button class="speed-btn active" data-speed="1.0">100%</button>
+                <button class="speed-btn" data-speed="0.9">90%</button>
+                <button class="speed-btn" data-speed="0.8">80%</button>
+                <button class="speed-btn" data-speed="0.7">70%</button>
+                <button class="speed-btn" data-speed="0.6">60%</button>
+                <button class="speed-btn" data-speed="0.5">50%</button>
+            </div>
+        </div>
+        
+        <div class="buttons">
+            <button id="startBtn1">Start</button>
+            <button id="nextBtn1" disabled>Next</button>
+            <button id="endBtn1" disabled>End</button>
+        </div>
+    </div>
+    
+    <!-- Página 100-999 -->
+    <div id="page2" class="hidden">
+        <div class="number-container">
+            <div class="number" id="numberDisplay2"></div>
+            <button class="speaker-btn" id="speakerBtn2" disabled>🔊</button>
+            <div class="speed-controls">
+                <button class="speed-btn active" data-speed="1.0">100%</button>
+                <button class="speed-btn" data-speed="0.9">90%</button>
+                <button class="speed-btn" data-speed="0.8">80%</button>
+                <button class="speed-btn" data-speed="0.7">70%</button>
+                <button class="speed-btn" data-speed="0.6">60%</button>
+                <button class="speed-btn" data-speed="0.5">50%</button>
+            </div>
+        </div>
+        
+        <div class="buttons">
+            <button id="startBtn2">Start</button>
+            <button id="nextBtn2" disabled>Next</button>
+            <button id="endBtn2" disabled>End</button>
+        </div>
+    </div>
+    
+    <!-- Página 1.000-999.999 -->
+    <div id="page3" class="hidden">
+        <div class="number-container">
+            <div class="number" id="numberDisplay3"></div>
+            <button class="speaker-btn" id="speakerBtn3" disabled>🔊</button>
+            <div class="speed-controls">
+                <button class="speed-btn active" data-speed="1.0">100%</button>
+                <button class="speed-btn" data-speed="0.9">90%</button>
+                <button class="speed-btn" data-speed="0.8">80%</button>
+                <button class="speed-btn" data-speed="0.7">70%</button>
+                <button class="speed-btn" data-speed="0.6">60%</button>
+                <button class="speed-btn" data-speed="0.5">50%</button>
+            </div>
+        </div>
+        
+        <div class="buttons">
+            <button id="startBtn3">Start</button>
+            <button id="nextBtn3" disabled>Next</button>
+            <button id="endBtn3" disabled>End</button>
+        </div>
+    </div>
+    
+    <!-- Botões para alternar entre faixas -->
+    <div class="range-buttons">
+        <button class="toggle-range" id="toggleRange100">100-999</button>
+        <button class="toggle-range" id="toggleRange1000">1.000-999.999</button>
+    </div>
+
+    <script>
+        // Configuração para todas as faixas numéricas
+        const config = {
+            page1: {
+                min: 0,
+                max: 99,
+                numbers: [],
+                currentIndex: -1,
+                randomNumbers: [],
+                currentSpeed: 1.0,
+                elements: {
+                    numberDisplay: document.getElementById('numberDisplay1'),
+                    speakerBtn: document.getElementById('speakerBtn1'),
+                    startBtn: document.getElementById('startBtn1'),
+                    nextBtn: document.getElementById('nextBtn1'),
+                    endBtn: document.getElementById('endBtn1'),
+                    speedControls: document.querySelector('#page1 .speed-controls')
+                }
+            },
+            page2: {
+                min: 100,
+                max: 999,
+                numbers: [],
+                currentIndex: -1,
+                randomNumbers: [],
+                currentSpeed: 1.0,
+                elements: {
+                    numberDisplay: document.getElementById('numberDisplay2'),
+                    speakerBtn: document.getElementById('speakerBtn2'),
+                    startBtn: document.getElementById('startBtn2'),
+                    nextBtn: document.getElementById('nextBtn2'),
+                    endBtn: document.getElementById('endBtn2'),
+                    speedControls: document.querySelector('#page2 .speed-controls')
+                }
+            },
+            page3: {
+                min: 1000,
+                max: 999999,
+                numbers: [],
+                currentIndex: -1,
+                randomNumbers: [],
+                currentSpeed: 1.0,
+                elements: {
+                    numberDisplay: document.getElementById('numberDisplay3'),
+                    speakerBtn: document.getElementById('speakerBtn3'),
+                    startBtn: document.getElementById('startBtn3'),
+                    nextBtn: document.getElementById('nextBtn3'),
+                    endBtn: document.getElementById('endBtn3'),
+                    speedControls: document.querySelector('#page3 .speed-controls')
+                }
+            }
+        };
+        
+        // Gerar números para todas as faixas
+        function generateNumbers(page) {
+            // Para números grandes (1.000-999.999), geramos aleatoriamente quando necessário
+            if (page.min >= 1000) return;
+            
+            for (let i = page.min; i <= page.max; i++) {
+                page.numbers.push(i);
+            }
+        }
+        
+        // Inicializar números para cada página
+        Object.values(config).forEach(page => generateNumbers(page));
+        
+        const toggleRange100Btn = document.getElementById('toggleRange100');
+        const toggleRange1000Btn = document.getElementById('toggleRange1000');
+        
+        // Check if speech synthesis is supported
+        const speechSupported = 'speechSynthesis' in window;
+        if (!speechSupported) {
+            alert("Speech synthesis is not supported in your browser. Audio features will not work.");
+        }
+        
+        // Função para embaralhar os números
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+        
+        // Gerar número aleatório em um intervalo
+        function getRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        
+        // Function to speak a number in English
+        function speakNumber(number, speed = 1.0) {
+            if (!speechSupported) return;
+            
+            const utterance = new SpeechSynthesisUtterance();
+            utterance.text = number.toString();
+            utterance.lang = 'en-US';
+            utterance.rate = speed;
+            
+            // Stop any currently playing speech
+            window.speechSynthesis.cancel();
+            
+            // Speak the number
+            window.speechSynthesis.speak(utterance);
+        }
+        
+        // Função para configurar controles de velocidade
+        function setupSpeedControls(page) {
+            const speedButtons = page.elements.speedControls.querySelectorAll('.speed-btn');
+            
+            speedButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remover classe active de todos os botões
+                    speedButtons.forEach(btn => btn.classList.remove('active'));
+                    // Adicionar classe active ao botão clicado
+                    button.classList.add('active');
+                    
+                    // Atualizar velocidade da página
+                    page.currentSpeed = parseFloat(button.dataset.speed);
+                });
+            });
+        }
+        
+        // Função genérica para configurar os eventos de uma página
+        function setupPage(page) {
+            setupSpeedControls(page);
+            
+            page.elements.startBtn.addEventListener('click', () => {
+                // Para números grandes, geramos aleatoriamente sem armazenar todos
+                if (page.min >= 1000) {
+                    const count = Math.floor(Math.random() * 11) + 10; // 10-20 números
+                    page.randomNumbers = Array.from({length: count}, () => getRandomNumber(page.min, page.max));
+                } else {
+                    // Para números pequenos, usamos o array pré-gerado
+                    const count = Math.floor(Math.random() * 11) + 10; // 10-20 números
+                    const shuffled = shuffleArray(page.numbers);
+                    page.randomNumbers = shuffled.slice(0, count);
+                }
+                
+                page.currentIndex = 0;
+                updateDisplay(page);
+                page.elements.startBtn.disabled = true;
+                page.elements.nextBtn.disabled = false;
+                page.elements.endBtn.disabled = false;
+            });
+            
+            page.elements.nextBtn.addEventListener('click', () => {
+                if (page.currentIndex < page.randomNumbers.length - 1) {
+                    page.currentIndex++;
+                    updateDisplay(page);
+                }
+                
+                if (page.currentIndex === page.randomNumbers.length - 1) {
+                    page.elements.nextBtn.disabled = true;
+                }
+            });
+            
+            page.elements.endBtn.addEventListener('click', () => {
+                page.currentIndex = -1;
+                page.randomNumbers = [];
+                page.elements.numberDisplay.textContent = '';
+                page.elements.speakerBtn.disabled = true;
+                page.elements.startBtn.disabled = false;
+                page.elements.nextBtn.disabled = true;
+                page.elements.endBtn.disabled = true;
+                
+                // Stop any speech
+                if (speechSupported) {
+                    window.speechSynthesis.cancel();
+                }
+            });
+            
+            page.elements.speakerBtn.addEventListener('click', () => {
+                if (page.currentIndex >= 0 && page.currentIndex < page.randomNumbers.length) {
+                    speakNumber(page.randomNumbers[page.currentIndex], page.currentSpeed);
+                }
+            });
+        }
+        
+        function updateDisplay(page) {
+            const currentNumber = page.randomNumbers[page.currentIndex];
+            page.elements.numberDisplay.textContent = currentNumber.toLocaleString();
+            page.elements.speakerBtn.disabled = !speechSupported;
+        }
+        
+        // Configurar todas as páginas
+        Object.values(config).forEach(page => setupPage(page));
+        
+        // Função para mostrar uma página específica
+        function showPage(pageId) {
+            // Esconder todas as páginas
+            document.getElementById('page1').classList.add('hidden');
+            document.getElementById('page2').classList.add('hidden');
+            document.getElementById('page3').classList.add('hidden');
+            
+            // Mostrar a página solicitada
+            document.getElementById(pageId).classList.remove('hidden');
+            
+            // Atualizar texto dos botões
+            toggleRange100Btn.textContent = pageId === 'page2' ? '0-99' : '100-999';
+            toggleRange1000Btn.textContent = '1.000-999.999';
+            
+            // Parar qualquer áudio em reprodução
+            if (speechSupported) {
+                window.speechSynthesis.cancel();
+            }
+        }
+        
+        // Alternar entre páginas
+        toggleRange100Btn.addEventListener('click', () => {
+            const currentPage = document.getElementById('page1').classList.contains('hidden') ? 
+                              (document.getElementById('page2').classList.contains('hidden') ? 'page3' : 'page2') : 'page1';
+            
+            if (currentPage === 'page2') {
+                showPage('page1');
+            } else {
+                showPage('page2');
+            }
+        });
+        
+        toggleRange1000Btn.addEventListener('click', () => {
+            showPage('page3');
+        });
+        
+        // Mostrar a página inicial
+        showPage('page1');
+    </script>
+</body>
+</html>

@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Números Divertidos 1-100</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', 'Marker Felt', 'Chilanka', cursive;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6ecbf5 0%, #c2e9fb 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .header {
+            text-align: center;
+            margin: 20px 0 15px;
+            width: 100%;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            color: #ff6b6b;
+            text-shadow: 3px 3px 0 #ffd166, 6px 6px 0 rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            animation: bounce 2s infinite;
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            color: #1a535c;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .instructions {
+            background-color: #ffd166;
+            border-radius: 20px;
+            padding: 12px 20px;
+            font-size: 1.2rem;
+            color: #1a535c;
+            margin: 10px 0 20px;
+            box-shadow: 0 6px 0 #ffb142;
+            text-align: center;
+            max-width: 600px;
+            border: 4px dashed #ff9f43;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .numbers-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+            max-width: 1200px;
+            width: 100%;
+            padding: 15px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .number-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            transform-style: preserve-3d;
+            border: 6px solid #ff9f43;
+            height: 120px;
+        }
+        
+        .number-card:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        
+        .number-card:active {
+            transform: translateY(3px) scale(0.98);
+        }
+        
+        .number-card.disabled {
+            opacity: 0.6;
+            transform: none;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        
+        .number-display {
+            width: 100%;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .number {
+            font-size: 2.5rem;
+            color: white;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(0,0,0,0.3);
+        }
+        
+        .number-name {
+            text-align: center;
+            padding: 8px 5px;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .bubbles {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 15px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="1" d="M0,224L48,213.3C96,203,192,181,288,170.7C384,160,480,160,576,176C672,192,768,224,864,224C960,224,1056,192,1152,176C1248,160,1344,160,1392,160L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .footer {
+            margin: 20px 0;
+            text-align: center;
+            color: #1a535c;
+            font-size: 1.1rem;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 20px;
+            max-width: 600px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .volume-control {
+            margin: 15px auto;
+            background: #ffd166;
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 0 #ffb142;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .volume-control i {
+            font-size: 1.5rem;
+            color: #1a535c;
+        }
+        
+        input[type="range"] {
+            width: 120px;
+            height: 15px;
+            -webkit-appearance: none;
+            background: #ff9f43;
+            border-radius: 8px;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 25px;
+            height: 25px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+        }
+        
+        .timer-display {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff6b6b;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .page-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 3px 0 #cc0000;
+        }
+        
+        .page-btn:hover {
+            transform: translateY(-2px);
+            background: #ff8f8f;
+        }
+        
+        .page-btn.active {
+            background: #1a535c;
+            box-shadow: 0 3px 0 #0d2b30;
+        }
+        
+        .page-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .floating {
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        .cloud {
+            position: absolute;
+            z-index: 1;
+            opacity: 0.8;
+        }
+        
+        .cloud:nth-child(1) {
+            top: 5%;
+            left: 3%;
+            font-size: 4rem;
+            animation: float 6s ease-in-out infinite;
+            color: white;
+        }
+        
+        .cloud:nth-child(2) {
+            top: 15%;
+            right: 5%;
+            font-size: 5rem;
+            animation: float 7s ease-in-out infinite;
+            animation-delay: 0.5s;
+            color: white;
+        }
+        
+        .cloud:nth-child(3) {
+            top: 70%;
+            left: 8%;
+            font-size: 3rem;
+            animation: float 5s ease-in-out infinite;
+            animation-delay: 1s;
+            color: white;
+        }
+        
+        .balloon {
+            position: absolute;
+            z-index: 0;
+            font-size: 2rem;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .balloon:nth-child(4) {
+            top: 10%;
+            left: 10%;
+            color: #ff6b6b;
+            animation-delay: 0s;
+        }
+        
+        .balloon:nth-child(5) {
+            top: 60%;
+            right: 10%;
+            color: #ffd166;
+            animation-delay: 2s;
+        }
+        
+        .balloon:nth-child(6) {
+            top: 35%;
+            left: 20%;
+            color: #6ecbf5;
+            animation-delay: 1s;
+        }
+        
+        .sun {
+            position: absolute;
+            top: 3%;
+            right: 3%;
+            font-size: 5rem;
+            color: #ffd166;
+            animation: rotate 20s linear infinite;
+            z-index: 0;
+        }
+        
+        .sound-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="%23ffffff"></path></svg>');
+            background-size: 100% 100%;
+            background-position: bottom;
+            opacity: 0.3;
+            animation: wave 10s linear infinite;
+        }
+        
+        .wave:nth-child(2) {
+            animation-delay: -5s;
+            opacity: 0.2;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes wave {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(-25%); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .subtitle { font-size: 1.2rem; }
+            .instructions { font-size: 1rem; padding: 8px 12px; }
+            .numbers-container { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; }
+            .number-name { font-size: 0.9rem; padding: 5px; height: 35px; }
+            .number { font-size: 2rem; }
+            .number-display { height: 60px; }
+            .number-card { height: 100px; border-width: 4px; }
+            .volume-control { padding: 8px 15px; }
+            input[type="range"] { width: 100px; }
+            .page-btn { width: 35px; height: 35px; font-size: 1rem; }
+        }
+        
+        /* Cores diferentes para grupos de números */
+        .number-1-10 { background: linear-gradient(to bottom, #ff4d4d, #cc0000) !important; }
+        .number-1-10 .number-name { background: #cc0000 !important; }
+        
+        .number-11-20 { background: linear-gradient(to bottom, #4da6ff, #0066cc) !important; }
+        .number-11-20 .number-name { background: #0066cc !important; }
+        
+        .number-21-30 { background: linear-gradient(to bottom, #66cc66, #339933) !important; }
+        .number-21-30 .number-name { background: #339933 !important; }
+        
+        .number-31-40 { background: linear-gradient(to bottom, #ffff66, #ffcc00) !important; }
+        .number-31-40 .number-name { background: #ffcc00 !important; color: #333; }
+        
+        .number-41-50 { background: linear-gradient(to bottom, #ffb84d, #ff8000) !important; }
+        .number-41-50 .number-name { background: #ff8000 !important; }
+        
+        .number-51-60 { background: linear-gradient(to bottom, #cc99ff, #9933cc) !important; }
+        .number-51-60 .number-name { background: #9933cc !important; }
+        
+        .number-61-70 { background: linear-gradient(to bottom, #ff99cc, #ff3399) !important; }
+        .number-61-70 .number-name { background: #ff3399 !important; }
+        
+        .number-71-80 { background: linear-gradient(to bottom, #cc9966, #996633) !important; }
+        .number-71-80 .number-name { background: #996633 !important; }
+        
+        .number-81-90 { background: linear-gradient(to bottom, #6ecbf5, #1a535c) !important; }
+        .number-81-90 .number-name { background: #1a535c !important; }
+        
+        .number-91-100 { background: linear-gradient(to bottom, #ffd166, #ffb142) !important; }
+        .number-91-100 .number-name { background: #ffb142 !important; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="cloud floating"><i class="fas fa-cloud"></i></div>
+    <div class="cloud floating"><i class="fas fa-cloud"></i></div>
+    <div class="cloud floating"><i class="fas fa-cloud"></i></div>
+    
+    <div class="balloon"><i class="fas fa-birthday-cake"></i></div>
+    <div class="balloon"><i class="fas fa-star"></i></div>
+    <div class="balloon"><i class="fas fa-heart"></i></div>
+    
+    <div class="sun"><i class="fas fa-sun"></i></div>
+    
+    <div class="sound-wave">
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+    
+    <div class="timer-display" id="timer">3</div>
+    
+    <div class="header">
+        <h1>🔢 Números Divertidos 1-100 🔢</h1>
+        <div class="subtitle">Clique nos números para ouvir seus nomes em inglês!</div>
+    </div>
+    
+    <div class="instructions">
+        <i class="fas fa-hand-point-down"></i> Toque nos números para aprender inglês! <i class="fas fa-hand-point-down"></i>
+    </div>
+    
+    <div class="volume-control">
+        <i class="fas fa-volume-down"></i>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="0.7">
+        <i class="fas fa-volume-up"></i>
+    </div>
+    
+    <div class="pagination" id="pagination">
+        <!-- Botões de paginação serão gerados por JavaScript -->
+    </div>
+    
+    <div class="numbers-container" id="numbers-container">
+        <!-- Os números serão gerados por JavaScript -->
+    </div>
+    
+    <div class="pagination" id="pagination-bottom">
+        <!-- Botões de paginação inferiores serão gerados por JavaScript -->
+    </div>
+    
+    <div class="footer">
+        <p>Feito com ❤️ para crianças aprenderem inglês de forma divertida!</p>
+        <p>Toque nos números para ouvir seus nomes em inglês!</p>
+    </div>
+    
+    <script>
+        // Configurações
+        const NUMBERS_PER_PAGE = 20;
+        const TOTAL_NUMBERS = 100;
+        const TOTAL_PAGES = Math.ceil(TOTAL_NUMBERS / NUMBERS_PER_PAGE);
+        
+        // Configuração do áudio
+        let audio = new Audio();
+        const volumeControl = document.getElementById('volume');
+        const timerDisplay = document.getElementById('timer');
+        const numbersContainer = document.getElementById('numbers-container');
+        const paginationTop = document.getElementById('pagination');
+        const paginationBottom = document.getElementById('pagination-bottom');
+        
+        let isSpeaking = false;
+        let timeoutId = null;
+        let currentPage = 1;
+        
+        // Números em inglês
+        const numberNames = {
+            1: "one", 2: "two", 3: "three", 4: "four", 5: "five",
+            6: "six", 7: "seven", 8: "eight", 9: "nine", 10: "ten",
+            11: "eleven", 12: "twelve", 13: "thirteen", 14: "fourteen", 15: "fifteen",
+            16: "sixteen", 17: "seventeen", 18: "eighteen", 19: "nineteen", 20: "twenty",
+            21: "twenty-one", 22: "twenty-two", 23: "twenty-three", 24: "twenty-four", 25: "twenty-five",
+            26: "twenty-six", 27: "twenty-seven", 28: "twenty-eight", 29: "twenty-nine", 30: "thirty",
+            31: "thirty-one", 32: "thirty-two", 33: "thirty-three", 34: "thirty-four", 35: "thirty-five",
+            36: "thirty-six", 37: "thirty-seven", 38: "thirty-eight", 39: "thirty-nine", 40: "forty",
+            41: "forty-one", 42: "forty-two", 43: "forty-three", 44: "forty-four", 45: "forty-five",
+            46: "forty-six", 47: "forty-seven", 48: "forty-eight", 49: "forty-nine", 50: "fifty",
+            51: "fifty-one", 52: "fifty-two", 53: "fifty-three", 54: "fifty-four", 55: "fifty-five",
+            56: "fifty-six", 57: "fifty-seven", 58: "fifty-eight", 59: "fifty-nine", 60: "sixty",
+            61: "sixty-one", 62: "sixty-two", 63: "sixty-three", 64: "sixty-four", 65: "sixty-five",
+            66: "sixty-six", 67: "sixty-seven", 68: "sixty-eight", 69: "sixty-nine", 70: "seventy",
+            71: "seventy-one", 72: "seventy-two", 73: "seventy-three", 74: "seventy-four", 75: "seventy-five",
+            76: "seventy-six", 77: "seventy-seven", 78: "seventy-eight", 79: "seventy-nine", 80: "eighty",
+            81: "eighty-one", 82: "eighty-two", 83: "eighty-three", 84: "eighty-four", 85: "eighty-five",
+            86: "eighty-six", 87: "eighty-seven", 88: "eighty-eight", 89: "eighty-nine", 90: "ninety",
+            91: "ninety-one", 92: "ninety-two", 93: "ninety-three", 94: "ninety-four", 95: "ninety-five",
+            96: "ninety-six", 97: "ninety-seven", 98: "ninety-eight", 99: "ninety-nine", 100: "one hundred"
+        };
+        
+        // Números em português
+        const portugueseNumbers = {
+            1: "Um", 2: "Dois", 3: "Três", 4: "Quatro", 5: "Cinco",
+            6: "Seis", 7: "Sete", 8: "Oito", 9: "Nove", 10: "Dez",
+            11: "Onze", 12: "Doze", 13: "Treze", 14: "Catorze", 15: "Quinze",
+            16: "Dezesseis", 17: "Dezessete", 18: "Dezoito", 19: "Dezenove", 20: "Vinte",
+            21: "Vinte e um", 22: "Vinte e dois", 23: "Vinte e três", 24: "Vinte e quatro", 25: "Vinte e cinco",
+            26: "Vinte e seis", 27: "Vinte e sete", 28: "Vinte e oito", 29: "Vinte e nove", 30: "Trinta",
+            31: "Trinta e um", 32: "Trinta e dois", 33: "Trinta e três", 34: "Trinta e quatro", 35: "Trinta e cinco",
+            36: "Trinta e seis", 37: "Trinta e sete", 38: "Trinta e oito", 39: "Trinta e nove", 40: "Quarenta",
+            41: "Quarenta e um", 42: "Quarenta e dois", 43: "Quarenta e três", 44: "Quarenta e quatro", 45: "Quarenta e cinco",
+            46: "Quarenta e seis", 47: "Quarenta e sete", 48: "Quarenta e oito", 49: "Quarenta e nove", 50: "Cinquenta",
+            51: "Cinquenta e um", 52: "Cinquenta e dois", 53: "Cinquenta e três", 54: "Cinquenta e quatro", 55: "Cinquenta e cinco",
+            56: "Cinquenta e seis", 57: "Cinquenta e sete", 58: "Cinquenta e oito", 59: "Cinquenta e nove", 60: "Sessenta",
+            61: "Sessenta e um", 62: "Sessenta e dois", 63: "Sessenta e três", 64: "Sessenta e quatro", 65: "Sessenta e cinco",
+            66: "Sessenta e seis", 67: "Sessenta e sete", 68: "Sessenta e oito", 69: "Sessenta e nove", 70: "Setenta",
+            71: "Setenta e um", 72: "Setenta e dois", 73: "Setenta e três", 74: "Setenta e quatro", 75: "Setenta e cinco",
+            76: "Setenta e seis", 77: "Setenta e sete", 78: "Setenta e oito", 79: "Setenta e nove", 80: "Oitenta",
+            81: "Oitenta e um", 82: "Oitenta e dois", 83: "Oitenta e três", 84: "Oitenta e quatro", 85: "Oitenta e cinco",
+            86: "Oitenta e seis", 87: "Oitenta e sete", 88: "Oitenta e oito", 89: "Oitenta e nove", 90: "Noventa",
+            91: "Noventa e um", 92: "Noventa e dois", 93: "Noventa e três", 94: "Noventa e quatro", 95: "Noventa e cinco",
+            96: "Noventa e seis", 97: "Noventa e sete", 98: "Noventa e oito", 99: "Noventa e nove", 100: "Cem"
+        };
+        
+        // Função para determinar a classe de cor com base no número
+        function getColorClass(number) {
+            if (number <= 10) return 'number-1-10';
+            if (number <= 20) return 'number-11-20';
+            if (number <= 30) return 'number-21-30';
+            if (number <= 40) return 'number-31-40';
+            if (number <= 50) return 'number-41-50';
+            if (number <= 60) return 'number-51-60';
+            if (number <= 70) return 'number-61-70';
+            if (number <= 80) return 'number-71-80';
+            if (number <= 90) return 'number-81-90';
+            return 'number-91-100';
+        }
+        
+        // Função para gerar os números da página atual
+        function generateNumbers(page) {
+            numbersContainer.innerHTML = '';
+            const start = (page - 1) * NUMBERS_PER_PAGE + 1;
+            const end = Math.min(page * NUMBERS_PER_PAGE, TOTAL_NUMBERS);
+            
+            for (let i = start; i <= end; i++) {
+                const colorClass = getColorClass(i);
+                const numberCard = document.createElement('div');
+                numberCard.className = `number-card ${colorClass}`;
+                numberCard.setAttribute('data-number', numberNames[i]);
+                
+                numberCard.innerHTML = `
+                    <div class="number-display">
+                        <div class="number">${i}</div>
+                    </div>
+                    <div class="number-name">${portugueseNumbers[i]}</div>
+                    <div class="bubbles"></div>
+                `;
+                
+                numbersContainer.appendChild(numberCard);
+            }
+            
+            // Adicionar eventos de clique após gerar os números
+            addClickEvents();
+        }
+        
+        // Função para gerar a paginação
+        function generatePagination() {
+            paginationTop.innerHTML = '';
+            paginationBottom.innerHTML = '';
+            
+            // Botão anterior
+            const prevBtnTop = document.createElement('button');
+            prevBtnTop.className = 'page-btn';
+            prevBtnTop.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            prevBtnTop.onclick = () => changePage(currentPage - 1);
+            
+            const prevBtnBottom = prevBtnTop.cloneNode(true);
+            
+            paginationTop.appendChild(prevBtnTop);
+            paginationBottom.appendChild(prevBtnBottom);
+            
+            // Botões de página
+            for (let i = 1; i <= TOTAL_PAGES; i++) {
+                const pageBtnTop = document.createElement('button');
+                pageBtnTop.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                pageBtnTop.textContent = i;
+                pageBtnTop.onclick = () => changePage(i);
+                
+                const pageBtnBottom = pageBtnTop.cloneNode(true);
+                
+                paginationTop.appendChild(pageBtnTop);
+                paginationBottom.appendChild(pageBtnBottom);
+            }
+            
+            // Botão próximo
+            const nextBtnTop = document.createElement('button');
+            nextBtnTop.className = 'page-btn';
+            nextBtnTop.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            nextBtnTop.onclick = () => changePage(currentPage + 1);
+            
+            const nextBtnBottom = nextBtnTop.cloneNode(true);
+            
+            paginationTop.appendChild(nextBtnTop);
+            paginationBottom.appendChild(nextBtnBottom);
+            
+            // Atualizar estado dos botões de navegação
+            updatePaginationButtons();
+        }
+        
+        // Função para mudar de página
+        function changePage(page) {
+            if (page < 1 || page > TOTAL_PAGES || page === currentPage) return;
+            
+            currentPage = page;
+            generateNumbers(currentPage);
+            generatePagination();
+            
+            // Rolagem suave para o topo
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // Função para atualizar os botões de navegação
+        function updatePaginationButtons() {
+            const prevButtons = document.querySelectorAll('.page-btn:first-child');
+            const nextButtons = document.querySelectorAll('.page-btn:last-child');
+            
+            prevButtons.forEach(btn => {
+                if (currentPage === 1) {
+                    btn.classList.add('disabled');
+                } else {
+                    btn.classList.remove('disabled');
+                }
+            });
+            
+            nextButtons.forEach(btn => {
+                if (currentPage === TOTAL_PAGES) {
+                    btn.classList.add('disabled');
+                } else {
+                    btn.classList.remove('disabled');
+                }
+            });
+        }
+        
+        // Função para desativar todos os botões por 3 segundos
+        function disableAllButtons() {
+            // Mostrar o timer
+            timerDisplay.style.opacity = '1';
+            timerDisplay.textContent = '3';
+            
+            // Desativar todos os botões
+            const cards = document.querySelectorAll('.number-card');
+            cards.forEach(card => {
+                card.classList.add('disabled');
+            });
+            
+            // Atualizar o timer a cada segundo
+            let seconds = 3;
+            timerDisplay.textContent = seconds;
+            
+            const timerInterval = setInterval(() => {
+                seconds--;
+                timerDisplay.textContent = seconds;
+                
+                if (seconds <= 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.style.opacity = '0';
+                    
+                    // Reativar os botões
+                    cards.forEach(card => {
+                        card.classList.remove('disabled');
+                    });
+                }
+            }, 1000);
+            
+            // Limpar qualquer timeout anterior
+            if (timeoutId) clearTimeout(timeoutId);
+            
+            // Configurar timeout para reativar os botões
+            timeoutId = setTimeout(() => {
+                cards.forEach(card => {
+                    card.classList.remove('disabled');
+                });
+                timerDisplay.style.opacity = '0';
+                clearInterval(timerInterval);
+            }, 3000);
+        }
+        
+        // Função para falar o número em inglês
+        function speakNumber(numberName) {
+            if (isSpeaking) return;
+            
+            isSpeaking = true;
+            
+            // Desativar todos os botões por 3 segundos
+            disableAllButtons();
+            
+            // Criar a URL da API de Text-to-Speech
+            const text = numberName;
+            const language = 'en';
+            const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${language}&client=tw-ob&q=${encodeURIComponent(text)}`;
+            
+            // Configurar o áudio
+            audio.src = url;
+            audio.volume = volumeControl.value;
+            
+            // Reproduzir o áudio
+            audio.play().catch(e => console.log("Erro ao reproduzir áudio:", e));
+            
+            // Resetar o estado após a reprodução
+            audio.onended = () => {
+                isSpeaking = false;
+            };
+        }
+        
+        // Função para adicionar eventos de clique aos números
+        function addClickEvents() {
+            document.querySelectorAll('.number-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    if (this.classList.contains('disabled')) return;
+                    
+                    // Obter o nome do número em inglês do atributo data
+                    const numberName = this.getAttribute('data-number');
+                    
+                    // Efeito visual ao clicar
+                    this.style.transform = 'scale(0.95)';
+                    this.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+                    
+                    setTimeout(() => {
+                        this.style.transform = '';
+                        this.style.boxShadow = '';
+                    }, 200);
+                    
+                    // Falar o número em inglês
+                    speakNumber(numberName);
+                });
+            });
+        }
+        
+        // Atualizar volume quando o controle deslizante for movido
+        volumeControl.addEventListener('input', function() {
+            audio.volume = this.value;
+        });
+        
+        // Efeito de confete ao carregar a página
+        setTimeout(() => {
+            const colors = ['#ff4d4d', '#4da6ff', '#66cc66', '#ffff66', '#ffb84d', '#cc99ff', '#ff99cc', '#cc9966', '#6ecbf5', '#ffd166'];
+            for (let i = 0; i < 30; i++) {
+                const confetti = document.createElement('div');
+                confetti.innerHTML = '<i class="fas fa-star"></i>';
+                confetti.style.position = 'fixed';
+                confetti.style.fontSize = Math.random() * 15 + 8 + 'px';
+                confetti.style.color = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-20px';
+                confetti.style.opacity = Math.random();
+                confetti.style.zIndex = '1000';
+                confetti.style.pointerEvents = 'none';
+                
+                document.body.appendChild(confetti);
+                
+                // Animação de confete caindo
+                const animation = confetti.animate([
+                    { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                    { transform: `translateY(${window.innerHeight + 30}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                ], {
+                    duration: Math.random() * 2000 + 1500,
+                    easing: 'cubic-bezier(0,0.9,0.57,1)'
+                });
+                
+                // Remover confete após animação
+                animation.onfinish = () => confetti.remove();
+            }
+        }, 500);
+        
+        // Animação de ondas sonoras
+        setInterval(() => {
+            if (isSpeaking) {
+                const waves = document.querySelectorAll('.wave');
+                waves.forEach(wave => {
+                    wave.style.animationDuration = (Math.random() * 3 + 7) + 's';
+                });
+            }
+        }, 1000);
+        
+        // Inicializar
+        generateNumbers(currentPage);
+        generatePagination();
+    </script>
+</body>
+</html>
